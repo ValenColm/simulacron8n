@@ -180,7 +180,7 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -528,
+        -576,
         192
       ],
       "id": "f00d5b80-38cb-4cae-a045-dca0ed515272",
@@ -195,8 +195,8 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -256,
-        176
+        -384,
+        192
       ],
       "id": "5b25a554-0262-49de-85a8-ae0c553a04ca",
       "name": "HTTP Request1"
@@ -293,8 +293,8 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -912,
-        672
+        -1040,
+        656
       ],
       "id": "c4a24123-20a3-44c5-8e6b-c21378c7f7f6",
       "name": "HTTP Request2"
@@ -308,7 +308,7 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -656,
+        -848,
         656
       ],
       "id": "2c9db4ef-34ee-4492-8208-9191c2f80f2b",
@@ -318,7 +318,7 @@
       "parameters": {
         "toolDescription": "Consulta información sobre productos financieros de Bancolombia como CDTs, créditos y cuentas. Úsala cuando el usuario pregunte sobre productos bancarios específicos.",
         "method": "POST",
-        "url": "http://192.168.1.12:8000/rag",
+        "url": "https://simulacron8n-production.up.railway.app/rag",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "= {\"mensaje\": \"{{ $fromAI('mensaje') }}\"}",
@@ -337,7 +337,7 @@
       "parameters": {
         "toolDescription": "Consulta preguntas frecuentes de FinBot como horarios, contraseñas y transferencias. Úsala cuando el usuario pregunte sobre soporte o información general de FinBot.",
         "method": "POST",
-        "url": "http://192.168.1.12:8000/cache",
+        "url": "https://simulacron8n-production.up.railway.app/cache",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\"mensaje\": \"{{ $fromAI('mensaje') }}\"}",
@@ -356,7 +356,7 @@
       "parameters": {
         "toolDescription": "Consulta información sobre productos financieros de Bancolombia como CDTs, créditos y cuentas. Úsala cuando el usuario pregunte sobre productos bancarios específicos.",
         "method": "POST",
-        "url": "http://192.168.1.12:8000/rag",
+        "url": "https://simulacron8n-production.up.railway.app/rag",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\"mensaje\": \"{{ $fromAI('mensaje') }}\"}",
@@ -375,7 +375,7 @@
       "parameters": {
         "toolDescription": "Consulta preguntas frecuentes de FinBot como horarios, contraseñas y transferencias. Úsala cuando el usuario pregunte sobre soporte o información general de FinBot.",
         "method": "POST",
-        "url": "http://192.168.1.12:8000/cache",
+        "url": "https://simulacron8n-production.up.railway.app/cache",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\"mensaje\": \"{{ $fromAI('mensaje') }}\"}",
@@ -614,12 +614,15 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
-  "versionId": "aee9c41f-dba1-4e43-9d8f-c7bbf70f4787",
+  "versionId": "d4809669-6aeb-4eee-9102-77116c45a168",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "16d5084e5916388c752e06b917a0aa4367176abf5b56407be7d57697403412ca"

@@ -17,7 +17,7 @@ URL = "https://www.bancolombia.com/personas/productos/creditos"
 # =============================================================================
 # Fase 1 — Ingestión (corre una sola vez al arrancar)
 # =============================================================================
-
+    
 def construir_base_vectorial():
     # 1. Carga el contenido de la URL con WebBaseLoader
     loader = WebBaseLoader(URL)
