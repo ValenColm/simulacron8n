@@ -1,83 +1,93 @@
-# FinBot — Versión n8n
+# FinBot — Asistente Financiero Multimodal con n8n y FastAPI
 
 ## Descripción
-FinBot es un asistente financiero automatizado con capacidades de Inteligencia Artificial. Está diseñado para interactuar con los usuarios mediante chat y voz, proporcionando información financiera en tiempo real (como la tasa representativa del USD o el precio de Bitcoin), realizando cálculos de intereses, y respondiendo preguntas específicas sobre créditos usando una base de conocimientos documental (RAG).
+FinBot es un asistente financiero automatizado con capacidades avanzadas de Inteligencia Artificial. Está diseñado para interactuar con los usuarios mediante chat de texto y voz, proporcionando información financiera en tiempo real (como la tasa representativa del USD o el precio de Bitcoin), realizando cálculos de intereses compuestos, y respondiendo preguntas específicas sobre créditos usando una base de conocimientos documental (RAG) optimizada con caché semántico.
 
 ## Arquitectura
-El sistema está compuesto por dos capas principales que interactúan entre sí:
+El sistema está compuesto por dos capas principales que interactúan entre sí y un frontend para el usuario final:
 
-1. **Capa de Orquestación (n8n Cloud)**: Es el cerebro de las operaciones. Gestiona los flujos conversacionales y de voz. Recibe las peticiones del usuario, procesa audios con Whisper y sintetiza respuestas de voz con ElevenLabs. Además, decide dinámicamente cuándo llamar a APIs públicas (CoinGecko, tasas de cambio) o a nuestro propio backend.
-2. **Capa de Backend Inteligente (FastAPI)**: Un servicio dedicado en Python que proporciona funciones avanzadas de IA. Incluye un sistema RAG (Retrieval-Augmented Generation) construido con LangChain y FAISS para buscar información sobre productos financieros (como créditos de Bancolombia), un sistema de caché semántico para optimizar consultas repetitivas, y capacidades de visión artificial.
+1. **Capa de Orquestación (n8n)**: Es el cerebro de las operaciones de enrutamiento. Gestiona los flujos conversacionales y de voz. Recibe las peticiones del usuario, procesa audios con Whisper, decide dinámicamente qué "Tools" ejecutar, y sintetiza respuestas de voz con ElevenLabs si el usuario lo requiere.
+2. **Capa de Backend Inteligente (FastAPI)**: Un servicio dedicado en Python que proporciona funciones avanzadas de IA. Incluye un sistema RAG construido con LangChain y FAISS para buscar información sobre productos financieros, un sistema de caché semántico para optimizar consultas repetitivas, y capacidades de visión artificial.
+3. **Capa Frontend (Vanilla JS/HTML/CSS)**: Interfaz de usuario intuitiva que soporta grabación de audio nativa, envío de imágenes y renderizado de respuestas dinámicas según el formato esperado (audio o texto).
 
-## Stack
-- n8n Cloud — agente y voz
-- FastAPI — RAG, caché y visión
-- OpenAI — GPT-4o, Whisper, embeddings
-- ElevenLabs — síntesis de voz
-- FAISS — base vectorial
-- LangChain — scraping y chunking
+## Stack Tecnológico
+- **n8n** — Orquestación de agentes, lógica condicional y webhooks.
+- **FastAPI** — Endpoints RAG, caché y visión.
+- **OpenAI** — GPT-4o-mini, Whisper, Embeddings.
+- **ElevenLabs** — Síntesis de voz dinámica.
+- **FAISS & LangChain** — Motor de búsqueda vectorial y chunking.
 
-## Workflows n8n
-- **Workflow 1** — Chat + Tools
-  - Tool: calculate_interest (Code)
-  - Tool: get_usd_rate (HTTP → open.er-api.com)
-  - Tool: get_bitcoin_price (HTTP → CoinGecko)
-  - Tool: consultar_rag (HTTP → FastAPI /rag)
-  - Tool: consultar_cache (HTTP → FastAPI /cache)
+---
 
-- **Workflow 2** — Voz
-  - Whisper → AI Agent → ElevenLabs
-  - Mismas 5 tools del Workflow 1
+## Ejecución Local (Frontend)
 
-## Endpoints FastAPI
-- `POST /rag` — RAG sobre Bancolombia
-- `POST /cache` — Caché semántico
-- `POST /vision` — Análisis de imágenes
+El backend inteligente y la orquestación (n8n) **ya se encuentran desplegados y configurados en la nube**, por lo que cualquier usuario u otro desarrollador solo necesita clonar el proyecto y correr el frontend localmente para utilizar la aplicación.
 
-## Limitación conocida
-n8n.cloud bloquea IPs privadas y localhost por protección SSRF.
-Las tools de RAG y caché están configuradas en los workflows
-pero requieren desplegar FastAPI en Railway o similar para funcionar.
-En producción se resolvería con Railway, Render o ngrok.
-
-## Instalación
-
-### Requisitos Previos
-- [Docker y Docker Compose](https://docs.docker.com/get-docker/) instalados en tu sistema.
-- [Git](https://git-scm.com/) instalado.
-
-### Clonar y preparar el entorno
-Independientemente de tu sistema operativo, el primer paso es clonar el repositorio y configurar las variables de entorno:
-
+### 1. Clonar el repositorio
 ```bash
 git clone <URL_DEL_REPOSITORIO>
 cd simulacron8n
-
-# Copiar el archivo de ejemplo para las variables de entorno
-cp .env.example .env
 ```
-*(Abre el archivo `.env` recién creado en tu editor de código y completa tus API Keys de OpenAI, etc.)*
 
-### Instalación en Windows
-Si utilizas **Docker Desktop** en Windows, los pasos son muy sencillos:
+### 2. Ejecutar el Frontend
+Para levantar la interfaz de usuario de chat y probar el bot en tu computadora:
 
-1. Asegúrate de tener Docker Desktop abierto y ejecutándose (el icono de la ballena debe aparecer en tu barra de tareas).
-2. Abre PowerShell, Git Bash o el Símbolo del Sistema (CMD) en la carpeta del proyecto (`simulacron8n`).
-3. Ejecuta el siguiente comando para construir y levantar el contenedor en segundo plano:
-   ```powershell
-   docker compose up -d --build
-   ```
-4. Puedes revisar que esté funcionando correctamente abriendo tu navegador en `http://localhost:8000`.
-
-### Instalación en Ubuntu Linux
-1. Asegúrate de tener instalado `docker` y `docker-compose-plugin` (o `docker-compose`).
-2. Abre tu terminal en la ruta del proyecto.
-3. Ejecuta el comando (es probable que necesites usar `sudo` dependiendo de tu configuración de permisos de Docker):
+1. Asegúrate de tener Python instalado en tu sistema.
+2. Abre tu terminal, navega a la carpeta del frontend y levanta un servidor local:
    ```bash
-   sudo docker compose up -d --build
+   cd frontend
+   python -m http.server 3000
    ```
-4. Verifica que el contenedor esté corriendo de manera exitosa ejecutando:
-   ```bash
-   sudo docker compose ps
-   ```
-5. El backend estará listo y escuchando peticiones en `http://localhost:8000`.
+3. Abre tu navegador en `http://localhost:3000` y ¡empieza a interactuar con FinBot!
+
+*(Nota: Las credenciales y URLs de los webhooks de n8n ya están preconfiguradas y centralizadas, por lo que no es necesario crear archivos `.env` locales para usar el frontend).*-
+
+## Estructura del Proyecto
+El repositorio está organizado de la siguiente manera:
+```text
+simulacron8n/
+│
+├── frontend/           # Capa de presentación (HTML, CSS, JS)
+│   ├── app.js          # Lógica principal del frontend y ruteo de peticiones
+│   ├── index.html      # Interfaz de usuario del chat
+│   └── styles.css      # (Si aplica) Estilos de la aplicación
+│
+├── backend/            # Capa de Inteligencia Artificial (FastAPI)
+│   ├── main.py         # Archivo principal de FastAPI (orquestador de rutas)
+│   ├── Reto04_rag.py   # Lógica RAG (faiss, embeddings, langchain)
+│   ├── Reto05_vision.py# Endpoint para procesar y describir imágenes
+│   └── Reto06_cache.py # Caché semántico (evita procesar la misma pregunta)
+│
+├── n8n/                # Configuración de los Workflows
+│   └── *.json          # Exportables de los agentes y flujos condicionales
+│
+└── requirements.txt    # Dependencias del backend
+```
+
+## Flujo de Peticiones del Frontend
+El frontend (`app.js`) actúa como un cliente ligero. No posee lógica de procesamiento complejo ni validaciones de RAG, su única responsabilidad es comunicarse con los servicios correspondientes:
+
+- **Modo Texto:** Hace peticiones `POST` enviando un JSON (`{ mensaje: "..." }`) directamente al Webhook de n8n del **Workflow 1** (Agente de Texto). 
+- **Modo Audio:** Hace peticiones `POST` enviando un JSON (`{ mensaje: "...", modo_audio: 'true' }`) al Webhook de n8n del **Workflow 2** (Agente Multimodal con ElevenLabs). 
+- **Modo Visión (Imágenes):** Hace peticiones `POST` utilizando `FormData` para enviar la imagen y el texto directamente al endpoint `/vision` del backend de **FastAPI** en Railway, saltándose a n8n para este caso específico.
+
+## Dependencias Principales (requirements.txt)
+Las herramientas utilizadas en el entorno de Python cumplen roles específicos dentro de la arquitectura del backend:
+- `fastapi` / `uvicorn` / `python-multipart`: Permiten construir el servidor web y manejar las peticiones HTTP asíncronas y subida de archivos (imágenes).
+- `langchain` / `langchain-openai` / `langchain-community`: Proveen el framework de desarrollo de IA (cargadores de documentos, creación de prompts, división de texto y cadenas lógicas RAG).
+- `faiss-cpu`: La base de datos vectorial local. Almacena en memoria el texto de los documentos convertido en vectores matemáticos (embeddings) tanto para el sistema RAG como para el caché semántico.
+- `openai`: El SDK oficial para interactuar directamente con los modelos visuales (`gpt-4o-mini`) en el endpoint de análisis de imágenes.
+- `beautifulsoup4`: Analizador web usado en la etapa de preparación de datos para limpiar y extraer el contenido en texto plano de las páginas objetivo.
+- `python-dotenv`: Carga de forma segura las credenciales (API Keys) desde el archivo `.env`.
+
+## Endpoints de FastAPI (Backend)
+Si deseas probar el backend de forma estrictamente local sin n8n (ejecutando `uvicorn main:app --reload` en la carpeta `backend/`), estos son los endpoints expuestos:
+- `POST /rag` — Responde preguntas buscando en la base vectorial con el contexto extraído.
+- `POST /cache` — Busca similitudes semánticas en preguntas previas para responder al instante.
+- `POST /vision` — Analiza imágenes recibidas por FormData usando modelos de visión.
+
+## Visualización de los Workflows (n8n)
+La orquestación del proyecto (decisiones, transcripción y ruteo a RAG) vive completamente dentro de la plataforma de n8n. Para poder visualizar cómo están estructurados los nodos condicionales y los agentes de IA, no basta con leer código; debes importar el flujo:
+1. Instala u obtén acceso a una instancia o cuenta de n8n.
+2. Ve a la carpeta `n8n/` de este repositorio.
+3. Importa los archivos `.json` dentro de tu cuenta de n8n para cargar los Workflows y observar el pipeline gráfico en acción.

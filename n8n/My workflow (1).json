@@ -21,7 +21,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Eres FinBot, el asistente virtual oficial de FinBot, una empresa fintech que opera en Colombia y Estados Unidos.\n\nPersonalidad y tono:\n- Mantén siempre un tono formal, profesional y empático propio del sector financiero.\n- Sé confiable, preciso y claro. Nunca uses lenguaje coloquial o informal.\n\nDetección automática de idioma:\n- Detecta el idioma de cada mensaje y responde SIEMPRE en ese mismo idioma.\n- Si el usuario escribe en español, responde completamente en español formal.\n- If the user writes in English, respond entirely in formal English.\n- If the user mixes Spanish and English in the same message (Spanglish), respond in the language that appears most in that message.\n\nTemas permitidos (SOLO responde sobre estos):\n1. Finanzas personales: presupuesto, ahorro, inversión, crédito, deudas, planificación.\n2. Mercados e inversiones: tasas de cambio, criptomonedas (Bitcoin, etc.), acciones, rendimientos.\n3. Productos y servicios de FinBot: cuentas, tarjetas, préstamos, transferencias.\n4. Soporte técnico: problemas con la app, transacciones, seguridad de la cuenta.\n\nRestricción de dominio:\n- Si el usuario pregunta algo que NO sea finanzas, productos FinBot o soporte, declina amablemente en el idioma activo.\n- Rechazo en español: \"Lo siento, solo puedo ayudarte con temas financieros, productos FinBot o soporte técnico.\"\n- Rejection in English: \"I am sorry, I can only assist with financial topics.\"\n\nMensaje del usuario: {{ $json.body.mensaje }}",
+        "text": "=Eres FinBot, el asistente virtual oficial de FinBot, una empresa fintech que opera en Colombia y Estados Unidos.\n\nPersonalidad y tono:\n- Mantén siempre un tono formal, profesional y empático propio del sector financiero.\n- Sé confiable, preciso y claro. Nunca uses lenguaje coloquial o informal.\n\nDetección automática de idioma:\n- Detecta el idioma de cada mensaje y responde SIEMPRE en ese mismo idioma.\n- Si el usuario escribe en español, responde completamente en español formal.\n- If the user writes in English, respond entirely in formal English.\n- If the user mixes Spanish and English in the same message (Spanglish), respond in the language that appears most in that message.\n\nTemas permitidos (SOLO responde sobre estos):\n1. Finanzas personales: presupuesto, ahorro, inversión, crédito, deudas, planificación.\n2. Mercados e inversiones: tasas de cambio, criptomonedas (Bitcoin, etc.), acciones, rendimientos.\n3. Productos y servicios de FinBot: cuentas, tarjetas, préstamos, transferencias.\n4. Soporte técnico: problemas con la app, transacciones, seguridad de la cuenta.\n- Cuando el usuario se presenta o saluda, responde amablemente y recuerda su nombre para el resto de la conversación.\n- Cuando el usuario pida un resumen de la conversación o mencione lo que se discutió, responde resumiendo los temas financieros tratados en la sesión.\n\nRestricción de dominio:\n- Si el usuario pregunta algo que NO sea finanzas, productos FinBot o soporte, declina amablemente en el idioma activo.\n- Rechazo en español: \"Lo siento, solo puedo ayudarte con temas financieros, productos FinBot o soporte técnico.\"\n- Rejection in English: \"I am sorry, I can only assist with financial topics.\"\n\nMensaje del usuario: {{ $json.body.mensaje }}",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -77,7 +77,7 @@
     {
       "parameters": {
         "respondWith": "text",
-        "responseBody": "={{ $json.output }}",
+        "responseBody": "={{ JSON.stringify({\"respuesta\": $json.output ?? $json.text ?? $json.respuesta}) }}",
         "options": {}
       },
       "type": "n8n-nodes-base.respondToWebhook",
@@ -99,8 +99,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -1344,
-        400
+        -1808,
+        544
       ],
       "id": "a48a126c-7bdd-4dd4-b8a0-7a2c504d3cf9",
       "name": "Webhook1",
@@ -116,8 +116,8 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.3,
       "position": [
-        -1104,
-        400
+        -1312,
+        528
       ],
       "id": "fddf2300-8db7-4a6d-b002-3ae3836a3ec3",
       "name": "Transcribe a recording",
@@ -131,14 +131,14 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Eres FinBot, el asistente virtual oficial de FinBot, una empresa fintech que opera en Colombia y Estados Unidos.\n\nPersonalidad y tono:\n- Mantén siempre un tono formal, profesional y empático propio del sector financiero.\n- Sé confiable, preciso y claro. Nunca uses lenguaje coloquial o informal.\n\nDetección automática de idioma:\n- Detecta el idioma de cada mensaje y responde SIEMPRE en ese mismo idioma.\n- Si el usuario escribe en español, responde completamente en español formal.\n- If the user writes in English, respond entirely in formal English.\n- If the user mixes Spanish and English in the same message (Spanglish), respond in the language that appears most in that message.\n\nTemas permitidos (SOLO responde sobre estos):\n1. Finanzas personales: presupuesto, ahorro, inversión, crédito, deudas, planificación.\n2. Mercados e inversiones: tasas de cambio, criptomonedas (Bitcoin, etc.), acciones, rendimientos.\n3. Productos y servicios de FinBot: cuentas, tarjetas, préstamos, transferencias.\n4. Soporte técnico: problemas con la app, transacciones, seguridad de la cuenta.\n\nRestricción de dominio:\n- Si el usuario pregunta algo que NO sea finanzas, productos FinBot o soporte, declina amablemente en el idioma activo.\n- Rechazo en español: \"Lo siento, solo puedo ayudarte con temas financieros, productos FinBot o soporte técnico.\"\n- Rejection in English: \"I am sorry, I can only assist with financial topics.\"\n\nMensaje del usuario: Mensaje del usuario: {{ $json.text }}",
+        "text": "=Eres FinBot, el asistente virtual oficial de FinBot, una empresa fintech que opera en Colombia y Estados Unidos.\n\nPersonalidad y tono:\n- Mantén siempre un tono formal, profesional y empático propio del sector financiero.\n- Sé confiable, preciso y claro. Nunca uses lenguaje coloquial o informal.\n\nDetección automática de idioma:\n- Detecta el idioma de cada mensaje y responde SIEMPRE en ese mismo idioma.\n- Si el usuario escribe en español, responde completamente en español formal.\n- If the user writes in English, respond entirely in formal English.\n- If the user mixes Spanish and English in the same message (Spanglish), respond in the language that appears most in that message.\nREGLA CRÍTICA DE IDIOMA: Debes detectar el idioma del ÚLTIMO mensaje del usuario y responder EXACTAMENTE en ese mismo idioma. Si el último mensaje es en inglés, tu respuesta entera, incluyendo resúmenes de temas pasados, DEBE ser en inglés. Ignorar esto es un error grave.\nTemas permitidos (SOLO responde sobre estos):\n1. Finanzas personales: presupuesto, ahorro, inversión, crédito, deudas, planificación.\n2. Mercados e inversiones: tasas de cambio, criptomonedas (Bitcoin, etc.), acciones, rendimientos.\n3. Productos y servicios de FinBot: cuentas, tarjetas, préstamos, transferencias.\n4. Soporte técnico: problemas con la app, transacciones, seguridad de la cuenta.\n- Cuando el usuario se presenta o saluda, responde amablemente y recuerda su nombre para el resto de la conversación.\n- Cuando el usuario pida un resumen de la conversación o mencione lo que se discutió, responde resumiendo los temas financieros tratados en la sesión.\n\nRestricción de dominio:\n- Si el usuario pregunta algo que NO sea finanzas, productos FinBot o soporte, declina amablemente en el idioma activo.\n- Rechazo en español: \"Lo siento, solo puedo ayudarte con temas financieros, productos FinBot o soporte técnico.\"\n- Rejection in English: \"I am sorry, I can only assist with financial topics.\"\n\nMensaje del usuario:{{ $json.text || $json.body.mensaje }}\n",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -864,
-        400
+        -1056,
+        512
       ],
       "id": "3daaaf48-9ef8-42b4-8bdc-d60f708eca82",
       "name": "AI Agent1"
@@ -151,8 +151,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        -288,
-        400
+        16,
+        576
       ],
       "id": "1a7283bc-4a14-4912-a5b9-c3ff97b54996",
       "name": "Respond to Webhook1"
@@ -215,8 +215,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        -1616,
-        640
+        -1376,
+        1152
       ],
       "id": "6a6364f0-de59-41f8-8c4d-ddf297205fe6",
       "name": "OpenAI Chat Model1",
@@ -230,14 +230,14 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "finbot-voice-session",
+        "sessionKey": "finbot-session",
         "contextWindowLength": 7
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
       "position": [
-        -1408,
-        656
+        -1152,
+        1136
       ],
       "id": "165250cc-e5eb-448b-80f2-3a987d306639",
       "name": "Simple Memory1"
@@ -258,8 +258,8 @@
       "type": "@elevenlabs/n8n-nodes-elevenlabs.elevenLabs",
       "typeVersion": 1,
       "position": [
-        -512,
-        400
+        -176,
+        560
       ],
       "id": "19e19943-d3c0-40a3-8113-e732ae4acc03",
       "name": "Convert text to speech",
@@ -278,8 +278,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolCode",
       "typeVersion": 1.3,
       "position": [
-        -1200,
-        672
+        -960,
+        1136
       ],
       "id": "2055e909-9ed4-4e3f-aab5-8d19b472159b",
       "name": "Code Tool1"
@@ -293,8 +293,8 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -1040,
-        656
+        -784,
+        1104
       ],
       "id": "c4a24123-20a3-44c5-8e6b-c21378c7f7f6",
       "name": "HTTP Request2"
@@ -308,8 +308,8 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -848,
-        656
+        -560,
+        1072
       ],
       "id": "2c9db4ef-34ee-4492-8208-9191c2f80f2b",
       "name": "HTTP Request3"
@@ -365,8 +365,8 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -416,
-        640
+        -256,
+        1056
       ],
       "id": "5aa3ca7f-a159-45b3-81e7-8a9f9f415fc3",
       "name": "HTTP Request6"
@@ -384,11 +384,93 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -176,
-        624
+        48,
+        1040
       ],
       "id": "752ca251-40ef-4495-aa9d-896294e41d32",
       "name": "HTTP Request7"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5304b2d1-7e0c-45ba-a24f-b68aa4ba9917",
+              "leftValue": "={{ $('Webhook1').item.json.body.modo_audio }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -560,
+        560
+      ],
+      "id": "1aa9278d-5266-498e-9c23-abce25d5ee64",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"transcripcion\": \"{{ $('Transcribe a recording').item.json.text }}\",\n  \"respuesta\": \"{{ $('AI Agent1').item.json.output }}\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        48,
+        784
+      ],
+      "id": "e6eb40e0-f97a-4376-96aa-fdb365672e2c",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "20dbad03-8b63-4038-8fef-fe9499129d26",
+              "leftValue": "={{ $('Webhook1').item.json.body.mensaje }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1568,
+        336
+      ],
+      "id": "76cf0034-655a-4b93-b75c-8d036f38a8e8",
+      "name": "If1"
     }
   ],
   "pinData": {},
@@ -441,7 +523,7 @@
       "main": [
         [
           {
-            "node": "Transcribe a recording",
+            "node": "If1",
             "type": "main",
             "index": 0
           }
@@ -463,7 +545,7 @@
       "main": [
         [
           {
-            "node": "Convert text to speech",
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -612,6 +694,42 @@
           }
         ]
       ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Convert text to speech",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -622,7 +740,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "d4809669-6aeb-4eee-9102-77116c45a168",
+  "versionId": "a0e692a2-ae78-4242-8d5a-c39215a47696",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "16d5084e5916388c752e06b917a0aa4367176abf5b56407be7d57697403412ca"
