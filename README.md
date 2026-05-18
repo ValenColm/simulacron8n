@@ -23,10 +23,11 @@ El sistema está compuesto por tres capas principales:
 1. **Capa Frontend (Vanilla JS/HTML/CSS)**: Interfaz de usuario ligera.
    - **Decisión Técnica:** Convierte directamente las imágenes subidas por el usuario a formato `Base64` en el lado del cliente y las envía a n8n en el payload JSON. Esto elimina la necesidad de pasar archivos binarios por un backend intermedio, optimizando la latencia.
 2. **Capa de Orquestación (n8n)**: Actúa como el enrutador inteligente y ejecutor de IA.
-   - **Decisión Técnica (Visión Integrada):** El procesamiento de imágenes (Visión Artificial) se realiza directamente desde n8n realizando una petición HTTP a OpenAI. Se evita delegarlo a Python para mantener el flujo conversacional unificado en el orquestador.
+   - **Decisión Técnica (Visión Integrada):** El procesamiento de imágenes se realiza directamente desde n8n realizando una petición HTTP a OpenAI.
+   - **Decisión Técnica (Stateless Memory):** Dado que n8n Cloud usa una arquitectura de múltiples workers, la memoria persistente de sesión puede perderse si el balanceador de carga cambia de servidor. Para garantizar una memoria a prueba de balas, la aplicación utiliza un enfoque "Stateless": el Frontend (`app.js`) almacena el historial de chat completo y se lo inyecta a n8n en cada petición.
 3. **Capa de Backend (FastAPI)**: Un servicio dedicado en Python enfocado exclusivamente en tareas computacionales pesadas.
-   - **Decisión Técnica (FAISS Local):** En lugar de usar servicios externos (como Supabase), la base de datos vectorial vive en la memoria de Python (FAISS). Por lo tanto, n8n debe realizar peticiones HTTP (hacia Railway) para buscar en el contexto financiero.
-   - **Decisión Técnica (Caché Semántico):** Se mantuvo el caché en Python. El caché semántico requiere convertir textos a embeddings y calcular la similitud del coseno usando `numpy`. Esta tarea matemática es ineficiente en n8n (JavaScript), por lo que delegarla a FastAPI garantiza un alto rendimiento.
+   - **Decisión Técnica (FAISS Local):** En lugar de usar servicios externos, la base de datos vectorial vive en la memoria de Python.
+   - **Decisión Técnica (Caché Semántico Frontend-First):** Para evitar el costo de invocar a n8n y al LLM, el frontend envía la pregunta primero al endpoint `/cache` en Railway. Si hay un "Hit" semántico, el frontend muestra la respuesta al instante con la insignia de Caché, ahorrando 100% de los tokens de IA. Si falla, delega la respuesta a n8n y luego guarda el resultado.
 
 ---
 
@@ -77,22 +78,20 @@ Cada librería listada en `requirements.txt` tiene un propósito vital para que 
 
 ## Flujo Detallado de Cada Petición (Frontend -> n8n -> Backend)
 
-1. **Modo Texto (Consultas Generales):**
-   - El Frontend envía un JSON (`{ mensaje: "..." }`) al Webhook `/chat` de n8n.
-   - El **AI Agent** evalúa la intención. Si es información general (ej. precios de criptomonedas, TRM), usa tools internas o responde directamente.
-   - Devuelve la respuesta estructurada en JSON al Frontend.
+1. **Modo Texto (Consultas Generales y RAG):**
+   - El Frontend intercepta el mensaje y consulta primero el endpoint `/cache` en el Backend de Python.
+   - Si hay un *Hit* en Caché, el Frontend renderiza la respuesta con la insignia visual `■ Caché` inmediatamente.
+   - Si no hay *Hit*, envía un JSON (`{ mensaje: "...", messages: [...] }`) al Webhook `/chat` de n8n, incluyendo el historial para la memoria sin estado.
+   - n8n invoca al **AI Agent**, quien detecta la intención y el idioma automáticamente. Si se requiere RAG, el Agente usa su "Tool" interna para hacer un POST a `/rag` en Python.
+   - Una vez el Agente responde, el Frontend almacena el resultado haciendo una petición de guardado a `/cache/guardar` en segundo plano.
 
 2. **Modo Visión (Análisis de Imágenes):**
    - El Frontend convierte la imagen a formato **Base64** internamente con `FileReader`.
-   - Envía el JSON (`{ mensaje: "...", image: "data:image/jpeg;base64,..." }`) al mismo Webhook `/chat`.
-   - Un nodo **If** en n8n detecta la presencia de la imagen, desvía el flujo para saltarse al Agente normal, formatea el prompt, y hace una petición directa a la API de **OpenAI Vision**.
-   - Se devuelve el análisis visual al Frontend.
+   - Envía el JSON con la imagen a n8n.
+   - Un nodo **If** en n8n detecta la presencia de la imagen (evaluando la longitud del campo), desvía el flujo para saltarse al Agente normal, formatea el prompt, y hace una petición directa a la API de **OpenAI Vision**.
 
-3. **Modo RAG y Caché Semántico:**
-   - Si el AI Agent determina que la pregunta es especializada (ej. *"¿Qué ofrece FinBot en créditos?"*), ejecuta sus *Tools* HTTP configuradas.
-   - n8n hace un `POST` al endpoint `/cache` en tu backend (FastAPI). Python calcula la similitud vectorial con peticiones anteriores; si hay un "Hit" (>0.85 de similitud), responde de inmediato.
-   - Si no hay "Hit" en el caché, n8n hace un `POST` a `/rag`. Python busca en **FAISS** y extrae los fragmentos oficiales.
-   - n8n formula la respuesta final conversacional usando el contexto técnico provisto por Python y la devuelve.
+3. **Insignias Visuales (Badges):**
+   - El proyecto cuenta con un sistema híbrido para la interfaz. Además de las alertas puras del caché, usa una detección heurística basada en expresiones regulares (`app.js`) para asignar el badge `🔍 RAG` o `⚡ Tool` dependiendo del contexto financiero abordado.
 
 4. **Modo Audio (Voz Multimodal):**
    - El Frontend graba el micrófono y envía un archivo binario `.webm` junto con la variable `modo_audio: 'true'` al Webhook independiente `/voice`.
