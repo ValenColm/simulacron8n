@@ -21,7 +21,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Eres FinBot, el asistente virtual oficial de FinBot, una empresa fintech que opera en Colombia y Estados Unidos.\n\nPersonalidad y tono:\n- Mantén siempre un tono formal, profesional y empático propio del sector financiero.\n- Sé confiable, preciso y claro. Nunca uses lenguaje coloquial o informal.\n\nDetección automática de idioma:\n- Detecta el idioma de cada mensaje y responde SIEMPRE en ese mismo idioma.\n- Si el usuario escribe en español, responde completamente en español formal.\n- If the user writes in English, respond entirely in formal English.\n- If the user mixes Spanish and English in the same message (Spanglish), respond in the language that appears most in that message.\n\nTemas permitidos (SOLO responde sobre estos):\n1. Finanzas personales: presupuesto, ahorro, inversión, crédito, deudas, planificación.\n2. Mercados e inversiones: tasas de cambio, criptomonedas (Bitcoin, etc.), acciones, rendimientos.\n3. Productos y servicios de FinBot: cuentas, tarjetas, préstamos, transferencias.\n4. Soporte técnico: problemas con la app, transacciones, seguridad de la cuenta.\n- Cuando el usuario se presenta o saluda, responde amablemente y recuerda su nombre para el resto de la conversación.\n- Cuando el usuario pida un resumen de la conversación o mencione lo que se discutió, responde resumiendo los temas financieros tratados en la sesión.\n\nRestricción de dominio:\n- Si el usuario pregunta algo que NO sea finanzas, productos FinBot o soporte, declina amablemente en el idioma activo.\n- Rechazo en español: \"Lo siento, solo puedo ayudarte con temas financieros, productos FinBot o soporte técnico.\"\n- Rejection in English: \"I am sorry, I can only assist with financial topics.\"\n\nMensaje del usuario: {{ $json.body.mensaje }}",
+        "text": "=Eres FinBot, el asistente virtual oficial de FinBot, una empresa fintech que opera en Colombia y Estados Unidos.\n\nPersonalidad y tono:\n- Mantén siempre un tono formal, profesional y empático propio del sector financiero.\n- Sé confiable, preciso y claro. Nunca uses lenguaje coloquial o informal.\n\nDetección automática de idioma:\n- Detecta el idioma de cada mensaje y responde SIEMPRE en ese mismo idioma.\n- Si el usuario escribe en español, responde completamente en español formal.\n- If the user writes in English, respond entirely in formal English.\n- If the user mixes Spanish and English in the same message (Spanglish), respond in the language that appears most in that message.\n\nTemas permitidos (SOLO responde sobre estos):\n1. Finanzas personales: presupuesto, ahorro, inversión, crédito, deudas, planificación.\n2. Mercados e inversiones: tasas de cambio, criptomonedas (Bitcoin, etc.), acciones, rendimientos.\n3. Productos y servicios de FinBot: cuentas, tarjetas, préstamos, transferencias.\n4. Soporte técnico: problemas con la app, transacciones, seguridad de la cuenta.\n- Cuando el usuario se presenta o saluda, responde amablemente y recuerda su nombre para el resto de la conversación.\n- Cuando el usuario pida un resumen de la conversación o mencione lo que se discutió, responde resumiendo los temas financieros tratados en la sesión.\n\nRestricción de dominio:\n- Si el usuario pregunta algo que NO sea finanzas, productos FinBot o soporte, declina amablemente en el idioma activo.\n- Rechazo en español: \"Lo siento, solo puedo ayudarte con temas financieros, productos FinBot o soporte técnico.\"\n- Rejection in English: \"I am sorry, I can only assist with financial topics.\"\n\nMensaje del usuario: {{ $json.chatInput }}",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -62,8 +62,8 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "finbot-session",
-        "contextWindowLength": 7
+        "sessionKey": "finbot-memory",
+        "contextWindowLength": 10
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
@@ -230,8 +230,8 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "finbot-session",
-        "contextWindowLength": 7
+        "sessionKey": "finbot-memory",
+        "contextWindowLength": 10
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
@@ -474,7 +474,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const body = $input.item.json.body;\nconst msg = body.mensaje || body.message || '';\n// Detectar idioma\nconst hasSpanishChars = ['á','é','í','ó','ú','ñ','ü','¿','¡'].some(c => msg.includes(c));\nconst spanishWords = ['cuánto','cómo','qué','dónde','cuándo','pesos','invertir','tasa','dólar','años','está','tengo','quiero','puedo'];\nconst msgLower = msg.toLowerCase();\nconst hasSpanishWords = spanishWords.some(w => msgLower.includes(w));\nconst englishWords = ['what','how much','invest','exchange rate','current','dollar','years','interest'];\nconst hasEnglishWords = englishWords.some(w => msgLower.includes(w));\nlet idioma;\nif (hasSpanishChars || hasSpanishWords) {\n  idioma = 'SPANISH';\n} else if (hasEnglishWords) {\n  idioma = 'ENGLISH';\n} else {\n  idioma = 'SPANISH';\n}\nconst limite = body.image ? 3 : 7;\nconst mensajes = (body.messages || []).slice(-limite);\nconst historial = mensajes.length > 0\n  ? mensajes.map(m => (m.role === 'user' ? 'Usuario' : 'FinBot') + ': ' + m.content).join('\\n') + '\\n\\n'\n  : '';\nreturn {\n  chatInput: '[RESPOND IN ' + idioma + ' ONLY]\\n\\n' + historial + msg,\n  image:     body.image || null,\n  mode:      body.mode  || 'text',\n  idioma:    idioma\n};"
+        "jsCode": "const body = $input.item.json.body;\nconst msg = body.mensaje || body.message || '';\nconst limite = body.image ? 3 : 7;\nconst mensajes = (body.messages || []).slice(-limite);\nconst historial = mensajes.length > 0\n  ? mensajes.map(m => (m.role === 'user' ? 'Usuario' : 'FinBot') + ': ' + m.content).join('\\n') + '\\n\\n'\n  : '';\nreturn {\n  chatInput: historial + msg,\n  image: body.image || \"\",\n  tieneImagen: body.image ? true : false,\n  mode: body.mode || 'text',\n  idioma: 'AUTO'\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -497,11 +497,11 @@
           "conditions": [
             {
               "id": "21bf2303-9a0e-4568-be5c-4b3be266c7d9",
-              "leftValue": "=={{ $json.image }}",
+              "leftValue": "={{ $json.tieneImagen }}",
               "rightValue": "",
               "operator": {
-                "type": "string",
-                "operation": "notEmpty",
+                "type": "boolean",
+                "operation": "true",
                 "singleValue": true
               }
             }
@@ -910,7 +910,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "e302d039-7a8d-4132-8701-6bf0338ec410",
+  "versionId": "97f8f16c-3804-488e-ad7a-567eb99ed525",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "16d5084e5916388c752e06b917a0aa4367176abf5b56407be7d57697403412ca"
