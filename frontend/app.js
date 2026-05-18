@@ -132,6 +132,13 @@ async function enviarTextoAlAgente(texto) {
             });
             const chatData = await chatRes.json();
             respuesta = chatData.respuesta;
+            
+            // Detección heurística de badges para la UI
+            if (detectarTool(texto)) {
+                badge = 'tool';
+            } else if (texto.toLowerCase().match(/(finbot|cdt|cuenta|tarjeta|crédito|bancolombia|web|página)/)) {
+                badge = 'rag';
+            }
         }
 
         removeTyping();
