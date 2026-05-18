@@ -152,18 +152,29 @@ async function enviarTextoAlAgente(texto) {
 async function enviarConImagen(texto, imagen) {
     showTyping();
     try {
-        const formData = new FormData();
-        formData.append('mensaje', texto || 'Analiza esta imagen');
-        formData.append('imagen', imagen);
-        const res = await fetch(`${RAILWAY}/vision`, { method: 'POST', body: formData });
-        if (!res.ok) {
-            const err = await res.text();
-            console.error('Error vision endpoint:', err);
-            throw new Error(`HTTP ${res.status}: ${err}`);
-        }
-        const data = await res.json();
-        removeTyping();
-        addMessage('bot', data.respuesta);
+        // Convertir imagen a Base64 para n8n
+        const reader = new FileReader();
+        reader.readAsDataURL(imagen);
+        reader.onload = async () => {
+            const base64Image = reader.result;
+            
+            // Enviar a tu Webhook de n8n (chat)
+            const chatRes = await fetch(N8N_CHAT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    mensaje: texto || 'Analiza esta imagen',
+                    image: base64Image 
+                })
+            });
+            
+            if (!chatRes.ok) throw new Error('Error en n8n');
+            const chatData = await chatRes.json();
+            
+            removeTyping();
+            addMessage('bot', chatData.respuesta);
+        };
+        reader.onerror = error => { throw error; };
     } catch (e) {
         removeTyping();
         console.error('enviarConImagen error:', e);

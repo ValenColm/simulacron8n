@@ -8,7 +8,6 @@ import os
 
 from Reto04_rag import construir_base_vectorial, responder_rag
 from Reto06_cache import responder_con_cache, poblar_cache, cache
-from Reto05_vision import analizar_imagen
 
 app = FastAPI()
 
@@ -61,23 +60,4 @@ async def endpoint_guardar_cache(request: GuardarCacheRequest):
     guardar_en_cache(request.pregunta, request.respuesta)
     return {"guardado": True}
 
-@app.post("/vision")
-async def endpoint_vision(
-    mensaje: str = Form(...),
-    imagen: UploadFile = File(None)
-):
-    ruta_tmp = None
-    try:
-        if imagen:
-            suffix = os.path.splitext(imagen.filename)[1] or ".jpg"
-            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-                contenido = await imagen.read()
-                tmp.write(contenido)
-                ruta_tmp = tmp.name
-            respuesta = analizar_imagen(mensaje, ruta_tmp)
-        else:
-            respuesta = analizar_imagen(mensaje)
-        return {"respuesta": respuesta}
-    finally:
-        if ruta_tmp and os.path.exists(ruta_tmp):
-            os.unlink(ruta_tmp)
+

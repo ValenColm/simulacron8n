@@ -11,8 +11,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -1072,
-        -64
+        -1216,
+        -256
       ],
       "id": "0f19b50c-90fd-4ea6-bcaa-f80bd7a8600c",
       "name": "Webhook",
@@ -27,7 +27,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -656,
+        -448,
         -64
       ],
       "id": "d5289a7d-6134-4c9e-81b9-7712c5857bdf",
@@ -68,7 +68,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
       "position": [
-        -992,
+        -960,
         208
       ],
       "id": "e2bf11ea-766d-4df9-98b2-8eb631964cb5",
@@ -83,8 +83,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        -224,
-        -64
+        320,
+        -160
       ],
       "id": "bb3ff374-75d0-4bc0-b5a8-0093ffd1ae4e",
       "name": "Respond to Webhook"
@@ -99,8 +99,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -1808,
-        544
+        -1856,
+        320
       ],
       "id": "a48a126c-7bdd-4dd4-b8a0-7a2c504d3cf9",
       "name": "Webhook1",
@@ -215,8 +215,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        -1376,
-        1152
+        -1552,
+        912
       ],
       "id": "6a6364f0-de59-41f8-8c4d-ddf297205fe6",
       "name": "OpenAI Chat Model1",
@@ -236,8 +236,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
       "position": [
-        -1152,
-        1136
+        -1264,
+        928
       ],
       "id": "165250cc-e5eb-448b-80f2-3a987d306639",
       "name": "Simple Memory1"
@@ -278,8 +278,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolCode",
       "typeVersion": 1.3,
       "position": [
-        -960,
-        1136
+        -1056,
+        912
       ],
       "id": "2055e909-9ed4-4e3f-aab5-8d19b472159b",
       "name": "Code Tool1"
@@ -293,8 +293,8 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -784,
-        1104
+        -848,
+        880
       ],
       "id": "c4a24123-20a3-44c5-8e6b-c21378c7f7f6",
       "name": "HTTP Request2"
@@ -308,8 +308,8 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -560,
-        1072
+        -576,
+        944
       ],
       "id": "2c9db4ef-34ee-4492-8208-9191c2f80f2b",
       "name": "HTTP Request3"
@@ -365,8 +365,8 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -256,
-        1056
+        -304,
+        960
       ],
       "id": "5aa3ca7f-a159-45b3-81e7-8a9f9f415fc3",
       "name": "HTTP Request6"
@@ -385,7 +385,7 @@
       "typeVersion": 4.4,
       "position": [
         48,
-        1040
+        976
       ],
       "id": "752ca251-40ef-4495-aa9d-896294e41d32",
       "name": "HTTP Request7"
@@ -471,6 +471,114 @@
       ],
       "id": "76cf0034-655a-4b93-b75c-8d036f38a8e8",
       "name": "If1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.item.json.body;\nconst msg = body.mensaje || body.message || '';\n// Detectar idioma\nconst hasSpanishChars = ['á','é','í','ó','ú','ñ','ü','¿','¡'].some(c => msg.includes(c));\nconst spanishWords = ['cuánto','cómo','qué','dónde','cuándo','pesos','invertir','tasa','dólar','años','está','tengo','quiero','puedo'];\nconst msgLower = msg.toLowerCase();\nconst hasSpanishWords = spanishWords.some(w => msgLower.includes(w));\nconst englishWords = ['what','how much','invest','exchange rate','current','dollar','years','interest'];\nconst hasEnglishWords = englishWords.some(w => msgLower.includes(w));\nlet idioma;\nif (hasSpanishChars || hasSpanishWords) {\n  idioma = 'SPANISH';\n} else if (hasEnglishWords) {\n  idioma = 'ENGLISH';\n} else {\n  idioma = 'SPANISH';\n}\nconst limite = body.image ? 3 : 7;\nconst mensajes = (body.messages || []).slice(-limite);\nconst historial = mensajes.length > 0\n  ? mensajes.map(m => (m.role === 'user' ? 'Usuario' : 'FinBot') + ': ' + m.content).join('\\n') + '\\n\\n'\n  : '';\nreturn {\n  chatInput: '[RESPOND IN ' + idioma + ' ONLY]\\n\\n' + historial + msg,\n  image:     body.image || null,\n  mode:      body.mode  || 'text',\n  idioma:    idioma\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -960,
+        -256
+      ],
+      "id": "259cfa05-b831-4ba8-8b07-b46a00846180",
+      "name": "parse input"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "21bf2303-9a0e-4568-be5c-4b3be266c7d9",
+              "leftValue": "=={{ $json.image }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -720,
+        -256
+      ],
+      "id": "addcce07-e745-44f5-aedd-2b0bbb2e30b3",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const chatInput = $input.first().json.chatInput;\nconst image = $input.first().json.image;\nreturn {\n  chatInput: chatInput,\n  image: image,\n  body: JSON.stringify({\n    model: \"gpt-4o-mini\",\n    messages: [\n      {\n        role: \"system\",\n        content: \"Eres FinBot, asistente financiero. Analiza la imagen y responde en el idioma del usuario. DEBES responder ÚNICAMENTE con este JSON exacto sin ningún texto adicional: {\\\"response\\\": \\\"tu respuesta descriptiva completa aquí\\\", \\\"tool_used\\\": \\\"imagen\\\"}. No uses markdown, no uses bloques de código, solo el JSON.\"\n      },\n      {\n        role: \"user\",\n        content: [\n          { type: \"text\", text: chatInput },\n          { type: \"image_url\", image_url: { url: image } }\n        ]\n      }\n    ]\n  })\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -416,
+        -272
+      ],
+      "id": "beed4df7-eb42-4c14-949c-5bc11183b6bd",
+      "name": "parse agent vision"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.parse($json.body) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -208,
+        -272
+      ],
+      "id": "4a388589-7b95-499a-8534-015b5133f90e",
+      "name": "openai vision api",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "86LlmCiIeRd5kQI7",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const content = $json.choices[0].message.content;\nconst cleaned = content.replace(/^```json\\n?/, '').replace(/\\n?```$/, '').trim();\nlet response, toolUsed;\ntry {\n  const parsed = JSON.parse(cleaned);\n  if (parsed.response) {\n    response = parsed.response;\n    toolUsed = parsed.tool_used || 'imagen';\n  } else {\n    response = JSON.stringify(parsed);\n    toolUsed = 'imagen';\n  }\n} catch(e) {\n  response = cleaned;\n  toolUsed = 'imagen';\n}\nreturn { respuesta: response, tool_used: toolUsed };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -272
+      ],
+      "id": "375802e3-54c2-494d-a1dc-434d881c4f63",
+      "name": "Parse Response Vision"
     }
   ],
   "pinData": {},
@@ -479,7 +587,7 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "parse input",
             "type": "main",
             "index": 0
           }
@@ -730,6 +838,68 @@
           }
         ]
       ]
+    },
+    "parse input": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "parse agent vision",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parse agent vision": {
+      "main": [
+        [
+          {
+            "node": "openai vision api",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "openai vision api": {
+      "main": [
+        [
+          {
+            "node": "Parse Response Vision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response Vision": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -740,7 +910,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "a0e692a2-ae78-4242-8d5a-c39215a47696",
+  "versionId": "e302d039-7a8d-4132-8701-6bf0338ec410",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "16d5084e5916388c752e06b917a0aa4367176abf5b56407be7d57697403412ca"
