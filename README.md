@@ -87,7 +87,7 @@ This project relies on several key libraries to power the backend and AI capabil
 - **`uvicorn`**: A lightning-fast ASGI server implementation.
   - *Usage*: Used to serve the FastAPI application locally and in production (Railway). It acts as the bridge between the web requests and the Python code.
 - **`python-multipart`**: A streaming multipart form parser for Python.
-  - *Usage*: Required by FastAPI to process form data and file uploads (even if images are sent as Base64, it's a standard FastAPI dependency for robust payload handling).
+  - *Usage*: Required by FastAPI to process form data and handle payloads robustly.
 
 ### LangChain Core & Retrieval Augmented Generation (RAG)
 - **`langchain`**: The core framework for developing applications powered by language models.
@@ -216,8 +216,6 @@ simulacron8n/
 ├── .env.example
 └── README.md
 ```
-
----
 
 ---
 
