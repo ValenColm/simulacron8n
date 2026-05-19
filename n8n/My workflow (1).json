@@ -379,7 +379,7 @@
     {
       "parameters": {
         "description": "\"Calculadora general. IMPORTANTE: El parámetro 'expresion' DEBE contener ÚNICAMENTE números y símbolos matemáticos (ej: 1250 * 0.19). NUNCA envíes palabras como 'multiplicado' o 'más'.\"",
-        "jsCode": "let expresion = $input.first().json.expresion;\n// Limpiar la expresión: solo deja números y operadores matemáticos\nexpresion = expresion.replace(/[^0-9+\\-*/().]/g, '');\n\ntry {\n  const resultado = Function('\"use strict\"; return (' + expresion + ')')();\n  return [{\n    json: {\n      expresion: expresion,\n      resultado: Math.round(resultado * 1000000) / 1000000\n    }\n  }];\n} catch(e) {\n  return [{\n    json: {\n      expresion: expresion,\n      error: \"Error matemático\"\n    }\n  }];\n}\n"
+        "jsCode": "// Atrapa cualquier parámetro que el Agente decida enviar\nlet expresion = $input.first().json.query || $input.first().json.expresion || Object.values($input.first().json)[0];\n\nif (!expresion) return \"Error: No recibí ninguna expresión matemática.\";\n\n// Limpiar: solo dejar números y operadores\nlet formula = String(expresion).replace(/[^0-9+\\-*/().]/g, '');\n\ntry {\n  let resultado = Function('\"use strict\"; return (' + formula + ')')();\n  // Le entregamos al Agente una respuesta en texto plano súper clara\n  return \"El resultado exacto de la operación matemática es: \" + resultado;\n} catch(e) {\n  return \"Error al calcular la fórmula: \" + formula;\n}\n"
       },
       "type": "@n8n/n8n-nodes-langchain.toolCode",
       "typeVersion": 1.3,
@@ -393,7 +393,7 @@
     {
       "parameters": {
         "description": "\"Calculadora general. IMPORTANTE: El parámetro 'expresion' DEBE contener ÚNICAMENTE números y símbolos matemáticos (ej: 1250 * 0.19). NUNCA envíes palabras como 'multiplicado' o 'más'.\"",
-        "jsCode": "let expresion = $input.first().json.expresion;\n// Limpiar la expresión: solo deja números y operadores matemáticos\nexpresion = expresion.replace(/[^0-9+\\-*/().]/g, '');\n\ntry {\n  const resultado = Function('\"use strict\"; return (' + expresion + ')')();\n  return [{\n    json: {\n      expresion: expresion,\n      resultado: Math.round(resultado * 1000000) / 1000000\n    }\n  }];\n} catch(e) {\n  return [{\n    json: {\n      expresion: expresion,\n      error: \"Error matemático\"\n    }\n  }];\n}\n"
+        "jsCode": "// Atrapa cualquier parámetro que el Agente decida enviar\nlet expresion = $input.first().json.query || $input.first().json.expresion || Object.values($input.first().json)[0];\n\nif (!expresion) return \"Error: No recibí ninguna expresión matemática.\";\n\n// Limpiar: solo dejar números y operadores\nlet formula = String(expresion).replace(/[^0-9+\\-*/().]/g, '');\n\ntry {\n  let resultado = Function('\"use strict\"; return (' + formula + ')')();\n  // Le entregamos al Agente una respuesta en texto plano súper clara\n  return \"El resultado exacto de la operación matemática es: \" + resultado;\n} catch(e) {\n  return \"Error al calcular la fórmula: \" + formula;\n}\n"
       },
       "type": "@n8n/n8n-nodes-langchain.toolCode",
       "typeVersion": 1.3,
@@ -628,7 +628,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "cf6fd0b0-6c07-4231-abd9-066b0b1cf6f5",
+  "versionId": "39a28de1-7fc7-419f-81e1-adb14a18203b",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "16d5084e5916388c752e06b917a0aa4367176abf5b56407be7d57697403412ca"
