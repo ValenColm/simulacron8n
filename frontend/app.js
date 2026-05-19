@@ -1,6 +1,5 @@
 const N8N_CHAT = 'https://valentina20.app.n8n.cloud/webhook/chat';
 const N8N_VOICE = 'https://valentina20.app.n8n.cloud/webhook/voice';
-const RAILWAY = 'https://simulacron8n-production.up.railway.app';
 
 let modoEntrada = 'texto', modoRespuesta = 'texto';
 let imagenSeleccionada = null;
@@ -114,7 +113,7 @@ async function enviarTextoAlAgente(texto) {
         let respuesta, badge = null, audioUrl = null;
 
         if (modoRespuesta === 'audio') {
-            // Modo audio → Workflow 2
+            // Modo audio → Workflow 2 (voice)
             const res = await fetch(N8N_VOICE, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -124,41 +123,20 @@ async function enviarTextoAlAgente(texto) {
             audioUrl = URL.createObjectURL(audioBlob);
             respuesta = '🔊 Respuesta en audio';
         } else {
-            // Modo texto → Workflow 1
-            // 1. Verificar Caché primero en Railway (Reto 06: Sin llamar al LLM)
-            const cacheRes = await fetch(`${RAILWAY}/cache`, {
+            // Modo texto → directo a n8n (Workflow 1)
+            const chatRes = await fetch(N8N_CHAT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mensaje: texto })
             });
-            const cacheData = await cacheRes.json();
+            const chatData = await chatRes.json();
+            respuesta = chatData.respuesta;
 
-            if (cacheData.desde_cache) {
-                respuesta = cacheData.respuesta;
-                badge = 'cache';
-            } else {
-                // 2. Si no hay caché, se llama a n8n
-                const chatRes = await fetch(N8N_CHAT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ mensaje: texto })
-                });
-                const chatData = await chatRes.json();
-                respuesta = chatData.respuesta;
-
-                // Guardar en caché en segundo plano
-                fetch(`${RAILWAY}/cache/guardar`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ pregunta: texto, respuesta: respuesta })
-                }).catch(e => console.error('Error guardando caché:', e));
-
-                // Detección heurística de badges para RAG/Tools
-                if (detectarTool(texto)) {
-                    badge = 'tool';
-                } else if (texto.toLowerCase().match(/(cdt|cuenta|tarjeta|crédito|bancolombia|prestamo|préstamo|tasas)/)) {
-                    badge = 'rag';
-                }
+            // Detección heurística de badges para RAG/Tools
+            if (detectarTool(texto)) {
+                badge = 'tool';
+            } else if (texto.toLowerCase().match(/(chapulín|chapulin|chespirito|colorado|personaje|episodio|frase)/)) {
+                badge = 'rag';
             }
         }
 
@@ -206,10 +184,10 @@ async function enviarConImagen(texto, imagen) {
 
 
 function detectarTool(texto) {
-    // Fallback: solo se usa si el backend no retorna tool_used
-    const kw = ['dólar', 'dollar', 'usd', 'cop', 'tasa', 'bitcoin', 'btc', 'crypto',
-        'invierto', 'inversión', 'interés', 'interest', 'rendimiento'];
-    return kw.some(k => texto.toLowerCase().includes(k));
+    // Detecta uso de tools: clima o calculadora
+    const kwClima = ['clima', 'tiempo', 'temperatura', 'lluvia', 'weather', 'calor', 'frío', 'frio', 'grados', 'pronóstico'];
+    const kwCalc = ['calcula', 'cuánto es', 'cuanto es', 'suma', 'resta', 'multiplica', 'divide', 'resultado', 'porcentaje', '+ ', '- ', '* ', '/ '];
+    return [...kwClima, ...kwCalc].some(k => texto.toLowerCase().includes(k));
 }
 
 function addTranscripcion(texto) {

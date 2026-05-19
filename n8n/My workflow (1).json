@@ -21,7 +21,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Eres FinBot, el asistente virtual oficial de FinBot, una empresa fintech que opera en Colombia y Estados Unidos.\n\nPersonalidad y tono:\n- Mantén siempre un tono formal, profesional y empático propio del sector financiero.\n- Sé confiable, preciso y claro. Nunca uses lenguaje coloquial o informal.\n\nDetección automática de idioma:\n- Detecta el idioma de cada mensaje y responde SIEMPRE en ese mismo idioma.\n- Si el usuario escribe en español, responde completamente en español formal.\n- If the user writes in English, respond entirely in formal English.\n- If the user mixes Spanish and English in the same message (Spanglish), respond in the language that appears most in that message.\n\nTemas permitidos (SOLO responde sobre estos):\n1. Finanzas personales: presupuesto, ahorro, inversión, crédito, deudas, planificación.\n2. Mercados e inversiones: tasas de cambio, criptomonedas (Bitcoin, etc.), acciones, rendimientos.\n3. Productos y servicios de FinBot: cuentas, tarjetas, préstamos, transferencias.\n4. Soporte técnico: problemas con la app, transacciones, seguridad de la cuenta.\n- Cuando el usuario se presenta o saluda, responde amablemente y recuerda su nombre para el resto de la conversación.\n- Cuando el usuario pida un resumen de la conversación o mencione lo que se discutió, responde resumiendo los temas financieros tratados en la sesión.\n\nRestricción de dominio:\n- Si el usuario pregunta algo que NO sea finanzas, productos FinBot o soporte, declina amablemente en el idioma activo.\n- Rechazo en español: \"Lo siento, solo puedo ayudarte con temas financieros, productos FinBot o soporte técnico.\"\n- Rejection in English: \"I am sorry, I can only assist with financial topics.\"\n\nMensaje del usuario: {{ $json.chatInput }}",
+        "text": "=Eres ValentinaBot, un asistente de conocimiento general y entretenimiento.\n\nPersonalidad y tono:\n- Mantén un tono amigable, curioso y entusiasta.\n- Sé claro, preciso y divertido sin perder el profesionalismo.\n- Responde siempre en el idioma que usa el usuario.\n\nDetección automática de idioma:\n- Si el usuario escribe en español, responde en español.\n- If the user writes in English, respond in English.\n\nTemas que puedes responder:\n1. Trivia y cultura pop: series, personajes, datos curiosos.\n2. Clima actual en cualquier ciudad del mundo (usa la tool de clima).\n3. Cálculos de interés compuesto e inversiones (usa la calculadora).\n4. Información sobre El Chapulín Colorado (usa el RAG).\n- Cuando el usuario se presenta, recuerda su nombre.\n- Cuando pida un resumen, resume los temas tratados en la conversación.\n\nRestricción:\n- Si preguntan algo fuera de estos temas, declina amablemente.\n- En español: \"Lo siento, solo puedo ayudarte con trivia, clima y cálculos.\"\n- In English: \"I'm sorry, I can only help with trivia, weather and calculations.\"\n\nMensaje del usuario: {{ $json.chatInput }}\n",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -48,7 +48,7 @@
       "typeVersion": 1.3,
       "position": [
         -1168,
-        208
+        240
       ],
       "id": "7c9e4f20-0aed-4544-9cd1-6541238f88fb",
       "name": "OpenAI Chat Model",
@@ -68,8 +68,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
       "position": [
-        -960,
-        208
+        -864,
+        240
       ],
       "id": "e2bf11ea-766d-4df9-98b2-8eb631964cb5",
       "name": "Simple Memory"
@@ -131,7 +131,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Eres FinBot, el asistente virtual oficial de FinBot, una empresa fintech que opera en Colombia y Estados Unidos.\n\nPersonalidad y tono:\n- Mantén siempre un tono formal, profesional y empático propio del sector financiero.\n- Sé confiable, preciso y claro. Nunca uses lenguaje coloquial o informal.\n\nDetección automática de idioma:\n- Detecta el idioma de cada mensaje y responde SIEMPRE en ese mismo idioma.\n- Si el usuario escribe en español, responde completamente en español formal.\n- If the user writes in English, respond entirely in formal English.\n- If the user mixes Spanish and English in the same message (Spanglish), respond in the language that appears most in that message.\nREGLA CRÍTICA DE IDIOMA: Debes detectar el idioma del ÚLTIMO mensaje del usuario y responder EXACTAMENTE en ese mismo idioma. Si el último mensaje es en inglés, tu respuesta entera, incluyendo resúmenes de temas pasados, DEBE ser en inglés. Ignorar esto es un error grave.\nTemas permitidos (SOLO responde sobre estos):\n1. Finanzas personales: presupuesto, ahorro, inversión, crédito, deudas, planificación.\n2. Mercados e inversiones: tasas de cambio, criptomonedas (Bitcoin, etc.), acciones, rendimientos.\n3. Productos y servicios de FinBot: cuentas, tarjetas, préstamos, transferencias.\n4. Soporte técnico: problemas con la app, transacciones, seguridad de la cuenta.\n- Cuando el usuario se presenta o saluda, responde amablemente y recuerda su nombre para el resto de la conversación.\n- Cuando el usuario pida un resumen de la conversación o mencione lo que se discutió, responde resumiendo los temas financieros tratados en la sesión.\n\nRestricción de dominio:\n- Si el usuario pregunta algo que NO sea finanzas, productos FinBot o soporte, declina amablemente en el idioma activo.\n- Rechazo en español: \"Lo siento, solo puedo ayudarte con temas financieros, productos FinBot o soporte técnico.\"\n- Rejection in English: \"I am sorry, I can only assist with financial topics.\"\n\nMensaje del usuario:{{ $json.text || $json.body.mensaje }}\n",
+        "text": "=Eres ValentinaBot, un asistente de conocimiento general y entretenimiento.\n\nPersonalidad y tono:\n- Mantén un tono amigable, curioso y entusiasta.\n- Sé claro, preciso y divertido sin perder el profesionalismo.\n- Responde siempre en el idioma que usa el usuario.\n\nDetección automática de idioma:\n- Si el usuario escribe en español, responde en español.\n- If the user writes in English, respond in English.\n\nTemas que puedes responder:\n1. Trivia y cultura pop: series, personajes, datos curiosos.\n2. Clima actual en cualquier ciudad del mundo (usa la tool de clima).\n3. Cálculos de interés compuesto e inversiones (usa la calculadora).\n4. Información sobre El Chapulín Colorado (usa el RAG).\n- Cuando el usuario se presenta, recuerda su nombre.\n- Cuando pida un resumen, resume los temas tratados en la conversación.\n\nRestricción:\n- Si preguntan algo fuera de estos temas, declina amablemente.\n- En español: \"Lo siento, solo puedo ayudarte con trivia, clima y cálculos.\"\n- In English: \"I'm sorry, I can only help with trivia, weather and calculations.\"\n\nMensaje del usuario:{{ $json.text || $json.body.mensaje }}\n",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -156,50 +156,6 @@
       ],
       "id": "1a7283bc-4a14-4912-a5b9-c3ff97b54996",
       "name": "Respond to Webhook1"
-    },
-    {
-      "parameters": {
-        "description": "Calcula interés compuesto. Úsala cuando el usuario pregunte cuánto crecerá una inversión.",
-        "jsCode": "const principal = $input.first().json.principal;\nconst rate = $input.first().json.rate;\nconst years = $input.first().json.years;\n\nconst monto_final = principal * Math.pow(1 + rate / 100, years);\nconst intereses = monto_final - principal;\n\nreturn [{\n  json: {\n    principal: Math.round(principal * 100) / 100,\n    tasa_anual: rate,\n    años: years,\n    monto_final: Math.round(monto_final * 100) / 100,\n    intereses_generados: Math.round(intereses * 100) / 100\n  }\n}];"
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolCode",
-      "typeVersion": 1.3,
-      "position": [
-        -768,
-        208
-      ],
-      "id": "9cb6b305-14ba-4a22-91f0-bd3d02f3f93c",
-      "name": "Code Tool"
-    },
-    {
-      "parameters": {
-        "toolDescription": "Consulta el tipo de cambio actual del dólar (USD) a pesos colombianos (COP). Úsala cuando el usuario pregunte por la tasa de cambio o el valor del dólar hoy.",
-        "url": "https://open.er-api.com/v6/latest/USD",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 4.4,
-      "position": [
-        -576,
-        192
-      ],
-      "id": "f00d5b80-38cb-4cae-a045-dca0ed515272",
-      "name": "HTTP Request"
-    },
-    {
-      "parameters": {
-        "toolDescription": "Obtiene el precio actual de Bitcoin en USD via CoinGecko. Úsala cuando el usuario pregunte por el precio del bitcoin o el mercado crypto.",
-        "url": "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 4.4,
-      "position": [
-        -384,
-        192
-      ],
-      "id": "5b25a554-0262-49de-85a8-ae0c553a04ca",
-      "name": "HTTP Request1"
     },
     {
       "parameters": {
@@ -269,126 +225,6 @@
           "name": "ElevenLabs account"
         }
       }
-    },
-    {
-      "parameters": {
-        "description": "Calcula interés compuesto. Úsala cuando el usuario pregunte cuánto crecerá una inversión.",
-        "jsCode": "const principal = $input.first().json.principal;\nconst rate = $input.first().json.rate;\nconst years = $input.first().json.years;\n\nconst monto_final = principal * Math.pow(1 + rate / 100, years);\nconst intereses = monto_final - principal;\n\nreturn [{\n  json: {\n    principal: Math.round(principal * 100) / 100,\n    tasa_anual: rate,\n    años: years,\n    monto_final: Math.round(monto_final * 100) / 100,\n    intereses_generados: Math.round(intereses * 100) / 100\n  }\n}];"
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolCode",
-      "typeVersion": 1.3,
-      "position": [
-        -1056,
-        912
-      ],
-      "id": "2055e909-9ed4-4e3f-aab5-8d19b472159b",
-      "name": "Code Tool1"
-    },
-    {
-      "parameters": {
-        "toolDescription": "Consulta el tipo de cambio actual del dólar (USD) a pesos colombianos (COP). Úsala cuando el usuario pregunte por la tasa de cambio o el valor del dólar hoy.",
-        "url": "https://open.er-api.com/v6/latest/USD",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 4.4,
-      "position": [
-        -848,
-        880
-      ],
-      "id": "c4a24123-20a3-44c5-8e6b-c21378c7f7f6",
-      "name": "HTTP Request2"
-    },
-    {
-      "parameters": {
-        "toolDescription": "Obtiene el precio actual de Bitcoin en USD via CoinGecko. Úsala cuando el usuario pregunte por el precio del bitcoin o el mercado crypto.",
-        "url": "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 4.4,
-      "position": [
-        -576,
-        944
-      ],
-      "id": "2c9db4ef-34ee-4492-8208-9191c2f80f2b",
-      "name": "HTTP Request3"
-    },
-    {
-      "parameters": {
-        "toolDescription": "Consulta información sobre productos financieros de Bancolombia como CDTs, créditos y cuentas. Úsala cuando el usuario pregunte sobre productos bancarios específicos.",
-        "method": "POST",
-        "url": "https://simulacron8n-production.up.railway.app/rag",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "= {\"mensaje\": \"{{ $fromAI('mensaje') }}\"}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 4.4,
-      "position": [
-        -48,
-        192
-      ],
-      "id": "23688dba-0949-4ba4-98f4-e116c3d472e6",
-      "name": "HTTP Request4"
-    },
-    {
-      "parameters": {
-        "toolDescription": "Consulta preguntas frecuentes de FinBot como horarios, contraseñas y transferencias. Úsala cuando el usuario pregunte sobre soporte o información general de FinBot.",
-        "method": "POST",
-        "url": "https://simulacron8n-production.up.railway.app/cache",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\"mensaje\": \"{{ $fromAI('mensaje') }}\"}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 4.4,
-      "position": [
-        176,
-        192
-      ],
-      "id": "fcbbf506-1063-4159-835a-133c38ed54fd",
-      "name": "HTTP Request5"
-    },
-    {
-      "parameters": {
-        "toolDescription": "Consulta información sobre productos financieros de Bancolombia como CDTs, créditos y cuentas. Úsala cuando el usuario pregunte sobre productos bancarios específicos.",
-        "method": "POST",
-        "url": "https://simulacron8n-production.up.railway.app/rag",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\"mensaje\": \"{{ $fromAI('mensaje') }}\"}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 4.4,
-      "position": [
-        -304,
-        960
-      ],
-      "id": "5aa3ca7f-a159-45b3-81e7-8a9f9f415fc3",
-      "name": "HTTP Request6"
-    },
-    {
-      "parameters": {
-        "toolDescription": "Consulta preguntas frecuentes de FinBot como horarios, contraseñas y transferencias. Úsala cuando el usuario pregunte sobre soporte o información general de FinBot.",
-        "method": "POST",
-        "url": "https://simulacron8n-production.up.railway.app/cache",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\"mensaje\": \"{{ $fromAI('mensaje') }}\"}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 4.4,
-      "position": [
-        48,
-        976
-      ],
-      "id": "752ca251-40ef-4495-aa9d-896294e41d32",
-      "name": "HTTP Request7"
     },
     {
       "parameters": {
@@ -474,7 +310,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const body = $input.item.json.body;\nconst msg = body.mensaje || body.message || '';\nconst limite = body.image ? 3 : 7;\nconst mensajes = (body.messages || []).slice(-limite);\nconst historial = mensajes.length > 0\n  ? mensajes.map(m => (m.role === 'user' ? 'Usuario' : 'FinBot') + ': ' + m.content).join('\\n') + '\\n\\n'\n  : '';\nreturn {\n  chatInput: historial + msg,\n  image: body.image || \"\",\n  tieneImagen: body.image ? true : false,\n  mode: body.mode || 'text',\n  idioma: 'AUTO'\n};"
+        "jsCode": "const body = $input.item.json.body;\nconst msg = body.mensaje || body.message || '';\nconst limite = body.image ? 3 : 7;\nconst mensajes = (body.messages || []).slice(-limite);\nconst historial = mensajes.length > 0\n  ? mensajes.map(m => (m.role === 'user' ? 'Usuario' : 'ValentinaBot') + ': ' + m.content).join('\\n') + '\\n\\n'\n  : '';\nreturn {\n  chatInput: historial + msg,\n  image: body.image || \"\",\n  tieneImagen: body.image ? true : false,\n  mode: body.mode || 'text',\n  idioma: 'AUTO'\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -521,7 +357,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const chatInput = $input.first().json.chatInput;\nconst image = $input.first().json.image;\nreturn {\n  chatInput: chatInput,\n  image: image,\n  body: JSON.stringify({\n    model: \"gpt-4o-mini\",\n    messages: [\n      {\n        role: \"system\",\n        content: \"Eres FinBot, asistente financiero. Analiza la imagen y responde en el idioma del usuario. DEBES responder ÚNICAMENTE con este JSON exacto sin ningún texto adicional: {\\\"response\\\": \\\"tu respuesta descriptiva completa aquí\\\", \\\"tool_used\\\": \\\"imagen\\\"}. No uses markdown, no uses bloques de código, solo el JSON.\"\n      },\n      {\n        role: \"user\",\n        content: [\n          { type: \"text\", text: chatInput },\n          { type: \"image_url\", image_url: { url: image } }\n        ]\n      }\n    ]\n  })\n};"
+        "jsCode": "const chatInput = $input.first().json.chatInput;\nconst image = $input.first().json.image;\nreturn {\n  chatInput: chatInput,\n  image: image,\n  body: JSON.stringify({\n    model: \"gpt-4o-mini\",\n    messages: [\n      {\n        role: \"system\",\n        content: \"Eres ValentinaBot, asistente de entretenimiento. Analiza la imagen y responde en el idioma del usuario. DEBES responder ÚNICAMENTE con este JSON exacto sin ningún texto adicional: {\\\"response\\\": \\\"tu respuesta descriptiva completa aquí\\\", \\\"tool_used\\\": \\\"imagen\\\"}. No uses markdown, no uses bloques de código, solo el JSON.\"\n      },\n      {\n        role: \"user\",\n        content: [\n          { type: \"text\", text: chatInput },\n          { type: \"image_url\", image_url: { url: image } }\n        ]\n      }\n    ]\n  })\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -579,6 +415,102 @@
       ],
       "id": "375802e3-54c2-494d-a1dc-434d881c4f63",
       "name": "Parse Response Vision"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Obtiene el clima actual de cualquier ciudad del mundo. Úsala cuando el usuario pregunte por el tiempo, temperatura o clima en algún lugar.\n",
+        "url": "=https://wttr.in/{{ $fromAI('ciudad') }}?format=3&lang=es",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        -384,
+        208
+      ],
+      "id": "f00d5b80-38cb-4cae-a045-dca0ed515272",
+      "name": "clima"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Consulta información sobre El Chapulín Colorado: personajes, episodios, frases y datos de la serie. Úsala cuando el usuario pregunte sobre el Chapulín Colorado o Chespirito.\n",
+        "method": "POST",
+        "url": "https://simulacron8n-production.up.railway.app/rag",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "= {\"mensaje\": \"{{ $fromAI('mensaje') }}\"}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        -48,
+        192
+      ],
+      "id": "23688dba-0949-4ba4-98f4-e116c3d472e6",
+      "name": "rag"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Obtiene el clima actual de cualquier ciudad del mundo. Úsala cuando el usuario pregunte por el tiempo, temperatura o clima en algún lugar.\n",
+        "url": "=https://wttr.in/{{ $fromAI('ciudad') }}?format=3&lang=es",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        -848,
+        880
+      ],
+      "id": "c4a24123-20a3-44c5-8e6b-c21378c7f7f6",
+      "name": "clima1"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Consulta información sobre El Chapulín Colorado: personajes, episodios, frases y datos de la serie. Úsala cuando el usuario pregunte sobre el Chapulín Colorado o Chespirito.\n",
+        "method": "POST",
+        "url": "https://simulacron8n-production.up.railway.app/rag",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"mensaje\": \"{{ $fromAI('mensaje') }}\"}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        -624,
+        848
+      ],
+      "id": "5aa3ca7f-a159-45b3-81e7-8a9f9f415fc3",
+      "name": "rag1"
+    },
+    {
+      "parameters": {
+        "description": "Calculadora general. Úsala cuando el usuario necesite hacer cualquier cálculo matemático: suma, resta, multiplicación, división, porcentajes o expresiones matemáticas.\n",
+        "jsCode": "const expresion = $input.first().json.expresion;\n\ntry {\n  const resultado = Function('\"use strict\"; return (' + expresion + ')')();\n  return [{\n    json: {\n      expresion: expresion,\n      resultado: Math.round(resultado * 1000000) / 1000000\n    }\n  }];\n} catch(e) {\n  return [{\n    json: {\n      expresion: expresion,\n      error: \"No se pudo calcular. Usa una expresión válida como: 100 * 0.15, 200 + 50, etc.\"\n    }\n  }];\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.3,
+      "position": [
+        -656,
+        240
+      ],
+      "id": "9cb6b305-14ba-4a22-91f0-bd3d02f3f93c",
+      "name": "calculadora"
+    },
+    {
+      "parameters": {
+        "description": "Calculadora general. Úsala cuando el usuario necesite hacer cualquier cálculo matemático: suma, resta, multiplicación, división, porcentajes o expresiones matemáticas.\n",
+        "jsCode": "const expresion = $input.first().json.expresion;\n\ntry {\n  const resultado = Function('\"use strict\"; return (' + expresion + ')')();\n  return [{\n    json: {\n      expresion: expresion,\n      resultado: Math.round(resultado * 1000000) / 1000000\n    }\n  }];\n} catch(e) {\n  return [{\n    json: {\n      expresion: expresion,\n      error: \"No se pudo calcular. Usa una expresión válida como: 100 * 0.15, 200 + 50, etc.\"\n    }\n  }];\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.3,
+      "position": [
+        -1056,
+        912
+      ],
+      "id": "2055e909-9ed4-4e3f-aab5-8d19b472159b",
+      "name": "calculadora1"
     }
   ],
   "pinData": {},
@@ -660,39 +592,6 @@
         ]
       ]
     },
-    "Code Tool": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request1": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "OpenAI Chat Model1": {
       "ai_languageModel": [
         [
@@ -721,83 +620,6 @@
           {
             "node": "Respond to Webhook1",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code Tool1": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request2": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request3": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request4": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request5": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request6": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request7": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -900,6 +722,72 @@
           }
         ]
       ]
+    },
+    "clima": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rag": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "clima1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rag1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calculadora": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calculadora1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -910,7 +798,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "97f8f16c-3804-488e-ad7a-567eb99ed525",
+  "versionId": "819b5032-cab2-4041-b9a6-dab710e0a519",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "16d5084e5916388c752e06b917a0aa4367176abf5b56407be7d57697403412ca"
