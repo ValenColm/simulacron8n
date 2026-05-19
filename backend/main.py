@@ -1,5 +1,5 @@
-# main.py — versión n8n
-# Solo expone RAG — el agente y las tools las maneja n8n
+# main.py — n8n version
+# Only exposes RAG — the agent and tools are managed by n8n
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -22,17 +22,17 @@ vectorstore = None
 @app.on_event("startup")
 async def startup():
     global vectorstore
-    # 1. Construye la base vectorial del RAG
-    print("Construyendo base vectorial RAG...")
+    # 1. Build the RAG vector base
+    print("Building RAG vector base...")
     vectorstore = construir_base_vectorial()
-    print("✅ Base vectorial lista.")
+    print("✅ Vector base ready.")
 
 class MensajeRequest(BaseModel):
     mensaje: str
 
-# Endpoint RAG
+# RAG Endpoint
 @app.post("/rag")
 async def endpoint_rag(request: MensajeRequest):
-    # Llama a responder_rag() con el vectorstore global
+    # Call responder_rag() with the global vectorstore
     respuesta = responder_rag(request.mensaje, vectorstore)
     return {"respuesta": respuesta}

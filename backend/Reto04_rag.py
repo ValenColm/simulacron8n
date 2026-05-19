@@ -9,20 +9,20 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 load_dotenv()
 
-# URL que vamos a indexar — documentada aquí
-# Elegimos la wiki de El Chapulín Colorado para el agente ValentinaBot
+# URL that we are going to index — documented here
+# We chose the El Chapulín Colorado wiki for the ValentinaBot agent
 URL = "https://chespirito.fandom.com/es/wiki/El_Chapul%C3%ADn_Colorado"
 
 # =============================================================================
-# Fase 1 — Ingestión (corre una sola vez al arrancar)
+# Phase 1 — Ingestion (runs only once on startup)
 # =============================================================================
     
 def construir_base_vectorial():
-    # 1. Carga el contenido de la URL con WebBaseLoader
+    # 1. Load the content of the URL with WebBaseLoader
     loader = WebBaseLoader(URL)
     documentos = loader.load()
 
-    # 2. Divide el texto en chunks con overlap
+    # 2. Split the text into chunks with overlap
     #    chunk_size=500, chunk_overlap=50
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=500,
@@ -30,36 +30,36 @@ def construir_base_vectorial():
     )
     chunks = splitter.split_documents(documentos)
 
-    # 3. Genera embeddings con OpenAIEmbeddings
+    # 3. Generate embeddings with OpenAIEmbeddings
     embeddings = OpenAIEmbeddings()
 
-    # 4. Guarda en FAISS y retorna el vectorstore
+    # 4. Save in FAISS and return the vectorstore
     vectorstore = FAISS.from_documents(chunks, embeddings)
     return vectorstore
 
 # =============================================================================
-# Fase 2 — Consulta (retorna contexto crudo)
+# Phase 2 — Query (returns raw context)
 # =============================================================================
 
 def consultar_rag(pregunta: str, vectorstore) -> str:
-    # 1. Busca los 3 chunks más relevantes en el vectorstore
+    # 1. Search for the 3 most relevant chunks in the vectorstore
     docs_relevantes = vectorstore.similarity_search(pregunta, k=3)
 
-    # 2. Une el texto de los chunks como contexto
+    # 2. Join the text of the chunks as context
     contexto = "\n\n".join(doc.page_content for doc in docs_relevantes)
 
-    # 3. Retorna el contexto para que el agente lo use
+    # 3. Return the context so the agent can use it
     return contexto
 
 # =============================================================================
-# Fase 3 — Respuesta (RAG completo: recuperación + generación)
+# Phase 3 — Response (Full RAG: retrieval + generation)
 # =============================================================================
 
 def responder_rag(pregunta: str, vectorstore) -> str:
-    # 1. Recupera el contexto relevante
+    # 1. Retrieve the relevant context
     contexto = consultar_rag(pregunta, vectorstore)
 
-    # 2. Construye el prompt con el contexto
+    # 2. Build the prompt with the context
     llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     messages = [
         SystemMessage(content=(
@@ -93,22 +93,22 @@ Contexto recuperado de la wiki de El Chapulín Colorado:
         HumanMessage(content=pregunta)
     ]
 
-    # 3. Genera y retorna la respuesta coherente
+    # 3. Generate and return the coherent response
     respuesta = llm.invoke(messages)
     return respuesta.content
 
 # =============================================================================
-# Prueba
+# Test
 # =============================================================================
 if __name__ == "__main__":
-    print("Construyendo base vectorial...")
+    print("Building vector base...")
     vs = construir_base_vectorial()
-    print("\n✅ Base lista. Escribe tu pregunta (o 'salir' para terminar)\n")
+    print("\n✅ Base ready. Type your question (or 'exit' to quit)\n")
 
     while True:
-        pregunta = input("Tu pregunta: ").strip()
+        pregunta = input("Your question: ").strip()
         if pregunta.lower() in ("salir", "exit", "q"):
-            print("¡Hasta luego!")
+            print("Goodbye!")
             break
         if not pregunta:
             continue
