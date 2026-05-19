@@ -10,11 +10,11 @@ The project is built with **n8n** as the AI orchestrator, **FastAPI** (Python) a
 
 ## Live Deployment URLs (For Evaluation)
 
-- **Frontend (GitHub Pages):** https://valencolm.github.io/simulacron8n/frontend/
 - **Backend / RAG Endpoint (Railway):** `https://simulacron8n-production.up.railway.app`
 - **n8n Chat Webhook:** `https://valentina20.app.n8n.cloud/webhook/chat`
 - **n8n Voice Webhook:** `https://valentina20.app.n8n.cloud/webhook/voice`
 
+*(Note: The frontend is stateless and runs directly by opening `index.html` in the browser, securely communicating with these cloud endpoints.)*
 
 ---
 
@@ -22,12 +22,12 @@ The project is built with **n8n** as the AI orchestrator, **FastAPI** (Python) a
 
 The backend and n8n workflows are already deployed to the cloud. To use the app:
 
-1. **Open the live frontend** at: https://valencolm.github.io/simulacron8n/frontend/
-2. **Done!** The frontend connects automatically to the cloud services (Railway + n8n).
+1. **Clone or download** this repository.
+2. Open the `frontend/` folder.
+3. **Double-click** `index.html` to open it in Chrome, Edge, or Firefox (or use the *Live Server* extension in VSCode).
+4. **Done!** The frontend connects automatically to the cloud services.
 
-Alternatively, to run locally:
-
-1. Clone this repository and open `frontend/index.html` in Chrome, Edge, or Firefox.
+> **Troubleshooting:** If the agent does not respond, go to your n8n dashboard and make sure the workflow is **Active** (the toggle switch at the top right must be blue/on). After making any changes to the workflow, always click **Save** and re-activate it.
 
 ---
 
@@ -43,7 +43,7 @@ The system has three layers:
   Tool badges                 Whisper STT
 ```
 
-1. **Frontend (Vanilla JS/HTML/CSS):** Lightweight chat interface. Converts images to Base64 client-side and sends them directly to n8n. Stores no state beyond the current session.
+1. **Frontend (Vanilla JS/HTML/CSS):** Lightweight chat interface. Sends text and voice input directly to n8n webhooks. Stores no state beyond the current session.
 
 2. **n8n (Orchestrator):** Receives requests via Webhooks (`/chat` and `/voice`). Runs the AI Agent (GPT-4o-mini) with access to tools. Uses ElevenLabs for Text-to-Speech and Whisper for Speech-to-Text.
 
@@ -209,7 +209,7 @@ simulacron8n/
 │   ├── main.py          # FastAPI app with /rag endpoint
 │   └── Reto04_rag.py    # RAG pipeline (WebLoader + FAISS + LangChain)
 ├── n8n/
-│   └── My workflow (1).json # Exported n8n workflow (import this in n8n)
+│   └── My workflow.json     # Exported n8n workflow (import this in n8n)
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
@@ -218,13 +218,6 @@ simulacron8n/
 ```
 
 ---
-
-## Technical Decisions
-
-- **Stateless Frontend Memory:** Since n8n Cloud uses multiple workers, session memory can be lost across requests. The `Simple Memory` node with a fixed `sessionKey` ensures conversation context is preserved.
-- **FAISS In-Memory:** Instead of a managed vector DB service, FAISS runs in the Python process RAM, zero cost, zero latency on retrieval.
-- **Base64 Vision:** Images are converted to Base64 client-side, eliminating the need for file upload endpoints and reducing latency.
-- **wttr.in for Weather:** Free, no API key required, supports format templates and language localization.
 
 ---
 
