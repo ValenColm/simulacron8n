@@ -2,7 +2,6 @@ const N8N_CHAT = 'https://valentina20.app.n8n.cloud/webhook/chat';
 const N8N_VOICE = 'https://valentina20.app.n8n.cloud/webhook/voice';
 
 let modoEntrada = 'texto', modoRespuesta = 'texto';
-let imagenSeleccionada = null;
 let mediaRecorder = null, audioChunks = [], grabando = false;
 
 function setModo(modo, btn) {
@@ -17,24 +16,7 @@ function setRespuesta(modo, btn) {
     btn.classList.add('active');
 }
 
-function handleImageSelect(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    imagenSeleccionada = file;
-    const reader = new FileReader();
-    reader.onload = ev => {
-        document.getElementById('image-preview').src = ev.target.result;
-        document.getElementById('image-name').textContent = file.name;
-        document.getElementById('image-preview-wrap').style.display = 'flex';
-    };
-    reader.readAsDataURL(file);
-}
 
-function removeImage() {
-    imagenSeleccionada = null;
-    document.getElementById('file-input').value = '';
-    document.getElementById('image-preview-wrap').style.display = 'none';
-}
 
 async function toggleRecording() {
     if (!grabando) {
@@ -93,15 +75,9 @@ function sendQuick(t) { document.getElementById('msg-input').value = t; enviar()
 async function enviar() {
     const input = document.getElementById('msg-input');
     const texto = input.value.trim();
-    if (!texto && !imagenSeleccionada) return;
+    if (!texto) return;
     document.getElementById('welcome')?.remove();
     input.value = ''; autoResize(input);
-
-    if (imagenSeleccionada) {
-        addMessage('user', texto || '(imagen adjunta)', { imagen: imagenSeleccionada });
-        await enviarConImagen(texto, imagenSeleccionada);
-        removeImage(); return;
-    }
 
     addMessage('user', texto);
     await enviarTextoAlAgente(texto);
@@ -148,40 +124,6 @@ async function enviarTextoAlAgente(texto) {
     }
 }
 
-async function enviarConImagen(texto, imagen) {
-    showTyping();
-    try {
-        // Convertir imagen a Base64 para n8n
-        const reader = new FileReader();
-        reader.readAsDataURL(imagen);
-        reader.onload = async () => {
-            const base64Image = reader.result;
-
-            // Enviar a tu Webhook de n8n (chat)
-            const chatRes = await fetch(N8N_CHAT, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    mensaje: texto || 'Analiza esta imagen',
-                    image: base64Image
-                })
-            });
-
-            if (!chatRes.ok) throw new Error('Error en n8n');
-            const chatData = await chatRes.json();
-
-            removeTyping();
-            addMessage('bot', chatData.respuesta);
-        };
-        reader.onerror = error => { throw error; };
-    } catch (e) {
-        removeTyping();
-        console.error('enviarConImagen error:', e);
-        addMessage('bot', `⚠️ Error al analizar la imagen: ${e.message}`);
-    }
-}
-
-
 
 function detectarTool(texto) {
     // Detecta uso de tools: clima o calculadora
@@ -203,13 +145,6 @@ function addMessage(rol, texto, opts = {}) {
     const chat = document.getElementById('chat');
     const wrap = document.createElement('div');
     wrap.className = `message ${rol}`;
-
-    if (opts.imagen) {
-        const img = document.createElement('img');
-        img.className = 'msg-image';
-        img.src = URL.createObjectURL(opts.imagen);
-        wrap.appendChild(img);
-    }
 
     const bubble = document.createElement('div');
     bubble.className = 'bubble';

@@ -28,7 +28,6 @@
             <span class="control-label">Entrada</span>
             <button class="mode-btn active" onclick="setModo('texto', this)">Texto</button>
             <button class="mode-btn" onclick="setModo('voz', this)">🎙 Voz</button>
-            <button class="mode-btn" onclick="setModo('imagen', this)">🖼 Imagen</button>
         </div>
         <div class="divider"></div>
         <div class="control-group">
@@ -53,11 +52,6 @@
     </div>
 
     <div class="input-area">
-        <div id="image-preview-wrap">
-            <img id="image-preview" src="" alt="preview">
-            <span id="image-name">imagen.jpg</span>
-            <button id="remove-image" onclick="removeImage()">✕</button>
-        </div>
         <div id="recording-indicator">
             <div class="rec-dot"></div>
             <span>Grabando... haz clic en 🎙 para detener</span>
@@ -66,9 +60,6 @@
             <textarea id="msg-input" placeholder="Escribe tu mensaje..." rows="1" onkeydown="handleKey(event)"
                 oninput="autoResize(this)"></textarea>
             <div class="action-btns">
-                <button class="icon-btn" onclick="document.getElementById('file-input').click()"
-                    title="Imagen">🖼</button>
-                <input type="file" id="file-input" accept="image/*" onchange="handleImageSelect(event)">
                 <button class="icon-btn" id="mic-btn" onclick="toggleRecording()" title="Voz">🎙</button>
                 <button id="send-btn" onclick="enviar()">➤</button>
             </div>

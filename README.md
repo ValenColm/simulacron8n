@@ -128,12 +128,6 @@ This project relies on several key libraries to power the backend and AI capabil
 4. n8n sends the text response to **ElevenLabs** for TTS synthesis.
 5. The MP3 audio is returned and auto-played in the browser.
 
-### Vision Mode:
-1. User uploads an image -> Frontend converts it to **Base64**.
-2. Sends the Base64 string to n8n `/chat`.
-3. A conditional node (`If2`) detects the image and routes to **OpenAI Vision API**.
-4. The response is returned and displayed in the chat.
-
 ---
 
 ## Running Locally (Backend Only)
