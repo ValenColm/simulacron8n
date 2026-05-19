@@ -10,11 +10,11 @@ The project is built with **n8n** as the AI orchestrator, **FastAPI** (Python) a
 
 ## Live Deployment URLs (For Evaluation)
 
+- **Frontend (GitHub Pages):** https://valencolm.github.io/simulacron8n/frontend/
 - **Backend / RAG Endpoint (Railway):** `https://simulacron8n-production.up.railway.app`
 - **n8n Chat Webhook:** `https://valentina20.app.n8n.cloud/webhook/chat`
 - **n8n Voice Webhook:** `https://valentina20.app.n8n.cloud/webhook/voice`
 
-*(Note: The frontend is stateless and runs directly by opening `index.html` in the browser, securely communicating with these cloud endpoints.)*
 
 ---
 
@@ -22,10 +22,12 @@ The project is built with **n8n** as the AI orchestrator, **FastAPI** (Python) a
 
 The backend and n8n workflows are already deployed to the cloud. To use the app:
 
-1. **Clone or download** this repository.
-2. Open the `frontend/` folder.
-3. **Double-click** `index.html` to open it in Chrome, Edge, or Firefox (or use the *Live Server* extension in VSCode).
-4. **Done!** The frontend connects automatically to the cloud services.
+1. **Open the live frontend** at: https://valencolm.github.io/simulacron8n/frontend/
+2. **Done!** The frontend connects automatically to the cloud services (Railway + n8n).
+
+Alternatively, to run locally:
+
+1. Clone this repository and open `frontend/index.html` in Chrome, Edge, or Firefox.
 
 ---
 
