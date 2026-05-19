@@ -226,4 +226,45 @@ simulacron8n/
 
 ---
 
+## Test Sequence (Validation Scenarios)
+
+To fully validate the agent's capabilities (RAG, tools, memory, domain restriction, multimodality, and bilingualism), follow this exact testing sequence in the frontend (`index.html`):
+
+### Phase 1: Tools and RAG
+*(Make sure both Input and Response are set to **Texto**)*
+
+1. **Weather Tool:**
+   - *Input:* "Hola Valentina, ¿qué clima está haciendo en Medellín hoy?"
+   - *Expected:* The agent fetches the current weather, and the **⚡ Tool** badge appears.
+2. **Calculator Tool:**
+   - *Input:* "Necesito que me calcules cuánto es 1250 * 0.19"
+   - *Expected:* The agent calculates the math exactly (237.5), and the **⚡ Tool** badge appears.
+3. **RAG (El Chapulín Colorado):**
+   - *Input:* "¿Me puedes decir cuál es el nombre real del Chapulín Colorado y su creador?"
+   - *Expected:* The agent answers using the FAISS vector database, and the **🔍 RAG** badge appears.
+
+### Phase 2: Restrictions, Memory and Language
+*(Keep Input and Response set to **Texto**)*
+
+4. **Domain Restriction:**
+   - *Input:* "¿Quién ganó el mundial de fútbol de 2022?" or "¿Cómo está el precio del Bitcoin?"
+   - *Expected:* The agent refuses to answer, stating it only knows about Chapulín Colorado, weather, and math.
+5. **Memory:**
+   - *Input:* "¿De qué te acabo de preguntar que no me quisiste responder?"
+   - *Expected:* The agent remembers the previous questions about football/Bitcoin, proving `Simple Memory` is active.
+6. **Bilingualism:**
+   - *Input:* "Can you tell me the weather in Tokyo right now?"
+   - *Expected:* The agent responds strictly in English with the correct weather info.
+
+### Phase 3: Multimodality (Voice and TTS)
+
+7. **Voice Input (Voice ➔ Text):**
+   - *Action:* Change Input to **🎙 Voz**, keep Response to **Texto**. Press the microphone and say: *"Calcula cuánto es 50 más 50"*.
+   - *Expected:* Whisper transcribes the audio, and the bot replies in text with the result (100).
+8. **Audio Output (Text ➔ Audio):**
+   - *Action:* Change Input to **Texto**, change Response to **🔊 Audio**. Type in English: *"Summarize what we discussed today"*.
+   - *Expected:* The agent processes the prompt, generates an English summary, sends it to ElevenLabs, and an audio player appears with the spoken response.
+
+---
+
 *Built with n8n, FastAPI, LangChain, FAISS, ElevenLabs, and OpenAI - RIWI 2026*
