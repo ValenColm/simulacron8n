@@ -62,7 +62,7 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "finbot-memory",
+        "sessionKey": "valentinabot-memory",
         "contextWindowLength": 10
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
@@ -186,7 +186,7 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "finbot-memory",
+        "sessionKey": "valentinabot-memory",
         "contextWindowLength": 10
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
@@ -628,7 +628,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "436bfbca-0c78-4a04-9747-2f5b4b9609ee",
+  "versionId": "cf964043-5071-4f3c-a13b-10a5d9cab6a7",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "16d5084e5916388c752e06b917a0aa4367176abf5b56407be7d57697403412ca"
