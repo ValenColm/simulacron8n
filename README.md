@@ -8,6 +8,16 @@ The project is built with **n8n** as the AI orchestrator, **FastAPI** (Python) a
 
 ---
 
+## Live Deployment URLs (For Evaluation)
+
+- **Backend / RAG Endpoint (Railway):** `https://simulacron8n-production.up.railway.app`
+- **n8n Chat Webhook:** `https://valentina20.app.n8n.cloud/webhook/chat`
+- **n8n Voice Webhook:** `https://valentina20.app.n8n.cloud/webhook/voice`
+
+*(Note: The frontend is stateless and runs directly by opening `index.html` in the browser, securely communicating with these cloud endpoints.)*
+
+---
+
 ## Quick Start (No Installation Required)
 
 The backend and n8n workflows are already deployed to the cloud. To use the app:
